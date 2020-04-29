@@ -1,16 +1,41 @@
 # CoviData India
 
-A data visualisation app for covid-19 cases in India
+CoviData India visualises COVID-19 data in India.
 
-## Getting Started
+It provides live statistics, along with daily count of confirmed, active, recovered and deceased patients. CoviData covers nation level, state level and district level cases.
 
-This project is a starting point for a Flutter application.
+<p align="center">
+  <img width="800px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss1.png">
+</p>
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshots
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss2.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss3.png">
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss4.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss5.png">
+
+### Do :star: the repo if you like it!
+
+### Data
+
+CoviData India uses <a targer="_blank" href="https://api.covid19india.org">COVID19-India API</a> for sourcing it's data.
+
+### Disclaimer
+
+CoviData India does not collect any personal data, nor does it require access to Bluetooth, and is in no way meant to be an alternative to Aarogya Setu launched by Govt. of India. Aarogya Setu provides government guidelines to fight the pandemic and makes it easier to backtrack potential COVID-19 cases. It is strongly recommended that you download Aarogya Setu too.
+
+## License
+
+    Copyright 2020 Abhishek Upmanyu
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
