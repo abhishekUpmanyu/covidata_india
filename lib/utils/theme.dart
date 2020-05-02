@@ -16,7 +16,27 @@ final darkTheme = ThemeData(
     bottomAppBarColor: Colors.black,
     cardColor: Color(0xFF2A2A2A),
     textTheme: TextTheme(
-        bodyText1: TextStyle(fontFamily: 'Darker Grotesque', fontSize: 16.0)),
+        headline1: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.white54,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 24.0),
+        subtitle1: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.white70,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 18.0),
+        bodyText1: TextStyle(fontFamily: 'Darker Grotesque', fontSize: 16.0),
+        bodyText2: TextStyle(
+            color: Colors.white70,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 18.0),
+      button: TextStyle(
+        fontWeight: FontWeight.w500,
+          color: Colors.white70,
+          fontFamily: 'Darker Grotesque',
+          fontSize: 14.0)
+    ),
     accentColor: Colors.teal);
 
 final lightTheme = ThemeData(
@@ -36,11 +56,30 @@ final lightTheme = ThemeData(
     bottomAppBarColor: Colors.white,
     cardColor: Colors.white,
     textTheme: TextTheme(
+        headline1: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.black54,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 24.0),
+        subtitle1: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 18.0),
         bodyText1: TextStyle(fontFamily: 'Darker Grotesque', fontSize: 16.0),
-    button: TextStyle(fontFamily: 'Darker Grotesque', fontSize: 12.0, color: Colors.black)),
+        bodyText2: TextStyle(
+            color: Colors.black87,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 18.0),
+        button: TextStyle(
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
+            fontFamily: 'Darker Grotesque',
+            fontSize: 14.0)
+    ),
     accentTextTheme: TextTheme(
         button: TextStyle(
             fontFamily: 'Darker Grotesque',
             fontSize: 12.0,
-            color: Colors.white)),
+            color: Colors.black)),
     accentColor: Colors.blue);

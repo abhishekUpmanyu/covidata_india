@@ -1,3 +1,4 @@
+import 'package:covidata/pages/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:covidata/pages/home.dart';
@@ -6,9 +7,6 @@ import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatefulWidget {
-  final Data data;
-  About(this.data);
-
   @override
   _AboutState createState() => _AboutState();
 }
@@ -29,12 +27,7 @@ class _AboutState extends State<About> {
                         Theme.of(context).appBarTheme.textTheme.headline6.color,
                     fontFamily: 'Megrim',
                     fontSize: 28.0))),
-        iconTheme: IconThemeData(color: Colors.black54),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.share, color: Colors.black54),
-              onPressed: () => Share.share('This will be the share feature'))
-        ],
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
       ),
       drawer: Drawer(
         child: ListView(
@@ -60,7 +53,7 @@ class _AboutState extends State<About> {
                 title: Text('Home'),
                 onTap: () => Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                        builder: (BuildContext context) => Home(widget.data)))),
+                        builder: (BuildContext context) => Home()))),
             ListTile(
                 leading: Icon(Icons.call),
                 title: Text('Helpline'),
@@ -73,7 +66,9 @@ class _AboutState extends State<About> {
               ),
             ),
             ListTile(
-                leading: Icon(Icons.info), title: Text('About'), onTap: () => Navigator.of(context).pop())
+                leading: Icon(Icons.info),
+                title: Text('About'),
+                onTap: () => Navigator.of(context).pop())
           ],
         ),
       ),
@@ -87,11 +82,7 @@ class _AboutState extends State<About> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text('About',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black54,
-                          fontFamily: 'Darker Grotesque',
-                          fontSize: MediaQuery.of(context).size.width / 16)),
+                      style: Theme.of(context).textTheme.headline1),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -100,29 +91,22 @@ class _AboutState extends State<About> {
                       'It provides live statistics, along with daily count of '
                       'confirmed, active, recovered and deceased patients. '
                       'CoviData covers nation level, state level and district level cases.',
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontFamily: 'Darker Grotesque',
-                          fontSize: MediaQuery.of(context).size.width / 24)),
+                      style: Theme.of(context).textTheme.bodyText2),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('API',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                          fontFamily: 'Darker Grotesque',
-                          fontSize: MediaQuery.of(context).size.width / 24)),
+                  child: Text(
+                    'API',
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
-                      'CoviData India uses COVID19-India API for sourcing it\'s data.',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontFamily: 'Darker Grotesque',
-                          fontSize: MediaQuery.of(context).size.width / 24)),
+                    'CoviData India uses COVID19-India API for sourcing it\'s data.',
+                    textAlign: TextAlign.justify,
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -138,12 +122,10 @@ class _AboutState extends State<About> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('Disclaimer',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black87,
-                          fontFamily: 'Darker Grotesque',
-                          fontSize: MediaQuery.of(context).size.width / 24)),
+                  child: Text(
+                    'Disclaimer',
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -156,10 +138,7 @@ class _AboutState extends State<About> {
                       'backtrack potential COVID-19 cases. It is strongly '
                       'recommended that you download Aarogya Setu too.',
                       textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontFamily: 'Darker Grotesque',
-                          fontSize: MediaQuery.of(context).size.width / 24)),
+                      style: Theme.of(context).textTheme.bodyText2),
                 )
               ],
             ),

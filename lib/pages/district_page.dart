@@ -42,14 +42,15 @@ class _DistrictPageState extends State<DistrictPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text(widget.data.name, style: TextStyle(color: Colors.black54)),
+        title: Text(widget.data.name, style: TextStyle(color: Theme.of(context).textTheme.headline6.color)),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black54),
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
       ),
       body: Column(
         children: <Widget>[

@@ -1,3 +1,6 @@
+import 'package:covidata/pages/settings.dart';
+import 'package:covidata/utils/theme.dart';
+import 'package:covidata/utils/theme_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:covidata/pages/about.dart';
@@ -5,15 +8,13 @@ import 'package:covidata/pages/live_stats.dart';
 import 'package:covidata/pages/news.dart';
 import 'package:covidata/pages/search.dart';
 import 'package:covidata/utils/data.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:swipe_up/swipe_up.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
-  final Data data;
-
-  Home(this.data);
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -22,24 +23,36 @@ class _HomeState extends State<Home> {
   Daily _yesterday;
   Daily _today;
 
+  bool _darkMode;
+
   @override
   void initState() {
     _setYTData();
     super.initState();
   }
 
+  void onThemeChanged(bool value, ThemeNotifier themeNotifier) async {
+    (value)
+        ? themeNotifier.setTheme(darkTheme)
+        : themeNotifier.setTheme(lightTheme);
+    var prefs = await SharedPreferences.getInstance();
+    prefs.setBool('darkMode', value);
+  }
+
   void _setYTData() {
-    if (DateTime.now().day == widget.data.caseData.daily.last.date.day) {
-      _today = widget.data.caseData.daily.last;
+    if (DateTime.now().day == Data.caseData.daily.last.date.day) {
+      _today = Data.caseData.daily.last;
       _yesterday =
-          widget.data.caseData.daily[widget.data.caseData.daily.length - 2];
+          Data.caseData.daily[Data.caseData.daily.length - 2];
     } else {
-      _yesterday = widget.data.caseData.daily.last;
+      _yesterday = Data.caseData.daily.last;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+    _darkMode = (themeNotifier.getTheme() == darkTheme);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -49,17 +62,19 @@ class _HomeState extends State<Home> {
             tag: 'covidata',
             child: Text('CoviData',
                 style: TextStyle(
+                  decoration: TextDecoration.none,
                     color:
                         Theme.of(context).appBarTheme.textTheme.headline6.color,
                     fontFamily: 'Megrim',
                     fontSize: 28.0))),
-        iconTheme: IconThemeData(color: Colors.black54),
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.share, color: Colors.black54),
-              onPressed: () => Share.share(
-                  'Download this amazing app that provides visualised COVID-19 '
-                  'data in India. https://play.google.com/store/apps/details?id=abhishekupmanyu.asciiemojis'))
+              icon: Icon(_darkMode?Icons.brightness_3:Icons.brightness_6, color: Theme.of(context).appBarTheme.iconTheme.color),
+              onPressed: () => setState(() {
+                _darkMode=!_darkMode;
+                onThemeChanged(_darkMode, themeNotifier);
+              }))
         ],
       ),
       drawer: Drawer(
@@ -101,7 +116,7 @@ class _HomeState extends State<Home> {
                 title: Text('About'),
                 onTap: () => Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                        builder: (BuildContext context) => About(widget.data))))
+                        builder: (BuildContext context) => About())))
           ],
         ),
       ),
@@ -130,7 +145,7 @@ class _HomeState extends State<Home> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              Search(widget.data)));
+                              Search()));
                     },
                     child: Row(
                       children: <Widget>[
@@ -141,11 +156,7 @@ class _HomeState extends State<Home> {
                         Expanded(
                           child: Text(
                             'Search for District or State',
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                fontSize:
-                                    MediaQuery.of(context).size.width / 24,
-                                color: Colors.black54),
+                            style: Theme.of(context).textTheme.bodyText2,
                           ),
                         ),
                       ],
@@ -160,7 +171,7 @@ class _HomeState extends State<Home> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    Text(widget.data.caseData.confirmed.toString(),
+                    Text(Data.caseData.confirmed.toString(),
                         style: TextStyle(
                             fontFamily: 'Darker Grotesque',
                             fontWeight: FontWeight.w500,
@@ -184,7 +195,7 @@ class _HomeState extends State<Home> {
                           children: <Widget>[
                             Column(
                               children: <Widget>[
-                                Text(widget.data.caseData.active.toString(),
+                                Text(Data.caseData.active.toString(),
                                     style: TextStyle(
                                         fontFamily: 'Darker Grotesque',
                                         color: Color(0xff0099cf),
@@ -216,7 +227,7 @@ class _HomeState extends State<Home> {
                             ),
                             Column(
                               children: <Widget>[
-                                Text(widget.data.caseData.recovered.toString(),
+                                Text(Data.caseData.recovered.toString(),
                                     style: TextStyle(
                                         fontFamily: 'Darker Grotesque',
                                         color: Color(0xff61dd74),
@@ -248,7 +259,7 @@ class _HomeState extends State<Home> {
                             ),
                             Column(
                               children: <Widget>[
-                                Text(widget.data.caseData.deceased.toString(),
+                                Text(Data.caseData.deceased.toString(),
                                     style: TextStyle(
                                         fontFamily: 'Darker Grotesque',
                                         color: Color(0xffe75f5f),
@@ -282,12 +293,12 @@ class _HomeState extends State<Home> {
                           bottomLeft: Radius.circular(5.0),
                           bottomRight: Radius.circular(5.0)),
                       elevation: 16.0,
-                      color: Colors.blue,
+                      color: Theme.of(context).accentColor,
                       child: InkWell(
                         onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: (BuildContext context) =>
-                                    LiveStats(widget.data))),
+                                    LiveStats())),
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Row(
@@ -425,16 +436,25 @@ class _HomeState extends State<Home> {
                                                         'Darker Grotesque')),
                                             Text(
                                                 _today == null
-                                                    ? (widget.data.caseData
+                                                    ? (Data.caseData
                                                                 .confirmed -
-                                                            widget.data.caseData
+                                                            Data.caseData
                                                                 .daily
                                                                 .reduce((a, b) => Daily(
                                                                     confirmed: a
                                                                             .confirmed +
                                                                         b
                                                                             .confirmed))
-                                                                .confirmed)
+                                                                .confirmed)<0?'0':(Data.caseData
+                                                    .confirmed -
+                                                    Data.caseData
+                                                        .daily
+                                                        .reduce((a, b) => Daily(
+                                                        confirmed: a
+                                                            .confirmed +
+                                                            b
+                                                                .confirmed))
+                                                        .confirmed)
                                                         .toString()
                                                     : _today.confirmed
                                                         .toString(),
@@ -443,6 +463,94 @@ class _HomeState extends State<Home> {
                                                         'Darker Grotesque',
                                                     fontWeight:
                                                         FontWeight.w600))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text('Recovered',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                    'Darker Grotesque',
+                                                    color: Color(0xff61dd74))),
+                                            Text(
+                                                _today == null
+                                                    ? (Data.caseData
+                                                    .recovered -
+                                                    Data.caseData
+                                                        .daily
+                                                        .reduce((a, b) => Daily(
+                                                        recovered: a
+                                                            .recovered +
+                                                            b
+                                                                .recovered))
+                                                        .recovered)<0?'0':(Data.caseData
+                                                    .recovered -
+                                                    Data.caseData
+                                                        .daily
+                                                        .reduce((a, b) => Daily(
+                                                        recovered: a
+                                                            .recovered +
+                                                            b
+                                                                .recovered))
+                                                        .recovered)
+                                                    .toString()
+                                                    : _today.recovered
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                    'Darker Grotesque',
+                                                    color: Color(0xff61dd74),
+                                                    fontWeight:
+                                                    FontWeight.w600))
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            Text('Deceased',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                    'Darker Grotesque',
+                                                  color: Color(0xffe75f5f),)),
+                                            Text(
+                                                _today == null
+                                                    ? (Data.caseData
+                                                    .deceased -
+                                                    Data.caseData
+                                                        .daily
+                                                        .reduce((a, b) => Daily(
+                                                        deceased: a
+                                                            .deceased +
+                                                            b
+                                                                .deceased))
+                                                        .deceased)<0?'0':(Data.caseData
+                                                    .deceased -
+                                                    Data.caseData
+                                                        .daily
+                                                        .reduce((a, b) => Daily(
+                                                        deceased: a
+                                                            .deceased +
+                                                            b
+                                                                .deceased))
+                                                        .deceased)
+                                                    .toString()
+                                                    : _today.deceased
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                    'Darker Grotesque',
+                                                    fontWeight:
+                                                    FontWeight.w600,
+                                                  color: Color(0xffe75f5f)))
                                           ],
                                         ),
                                       )

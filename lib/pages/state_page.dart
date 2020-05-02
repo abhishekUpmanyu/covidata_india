@@ -7,9 +7,9 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:covidata/utils/graph_duration.dart';
 
 class StatePage extends StatefulWidget {
-  final StateData data;
+  final int index;
 
-  StatePage(this.data);
+  StatePage(this.index);
 
   @override
   _StatePageState createState() => _StatePageState();
@@ -36,9 +36,9 @@ class _StatePageState extends State<StatePage> {
 
   List<charts.Series<CADRPie, String>> _seriesPieData() {
     var pieData = [
-      CADRPie('Active', widget.data.active, Color(0xff0099cf)),
-      CADRPie('Recovered', widget.data.recovered, Color(0xff61dd74)),
-      CADRPie('Deceased', widget.data.deceased, Color(0xffe75f5f))
+      CADRPie('Active', Data.caseData.states[widget.index].active, Color(0xff0099cf)),
+      CADRPie('Recovered', Data.caseData.states[widget.index].recovered, Color(0xff61dd74)),
+      CADRPie('Deceased', Data.caseData.states[widget.index].deceased, Color(0xffe75f5f))
     ];
     return [
       charts.Series(
@@ -55,12 +55,12 @@ class _StatePageState extends State<StatePage> {
   List<charts.Series<DateVsValue, DateTime>> _dailyConfirmedData() {
     int maxIndex = _graphDuration == GraphDuration.week
         ? 7
-        : _graphDuration == GraphDuration.month ? 30 : widget.data.daily.length;
+        : _graphDuration == GraphDuration.month ? 30 : Data.caseData.states[widget.index].daily.length;
     var confirmedData = List<DateVsValue>.generate(
         maxIndex,
         (index) => DateVsValue(
-            widget.data.daily[widget.data.daily.length - maxIndex + index].date,
-            widget.data.daily[widget.data.daily.length - maxIndex + index]
+            Data.caseData.states[widget.index].daily[Data.caseData.states[widget.index].daily.length - maxIndex + index].date,
+            Data.caseData.states[widget.index].daily[Data.caseData.states[widget.index].daily.length - maxIndex + index]
                 .confirmed
                 .toDouble()));
     return [
@@ -76,12 +76,12 @@ class _StatePageState extends State<StatePage> {
   List<charts.Series<DateVsValue, DateTime>> _dailyRecoveredData() {
     int maxIndex = _graphDuration == GraphDuration.week
         ? 7
-        : _graphDuration == GraphDuration.month ? 30 : widget.data.daily.length;
+        : _graphDuration == GraphDuration.month ? 30 : Data.caseData.states[widget.index].daily.length;
     var recoveredData = List<DateVsValue>.generate(
         maxIndex,
         (index) => DateVsValue(
-            widget.data.daily[widget.data.daily.length - maxIndex + index].date,
-            widget.data.daily[widget.data.daily.length - maxIndex + index]
+            Data.caseData.states[widget.index].daily[Data.caseData.states[widget.index].daily.length - maxIndex + index].date,
+            Data.caseData.states[widget.index].daily[Data.caseData.states[widget.index].daily.length - maxIndex + index]
                 .recovered
                 .toDouble()));
     return [
@@ -97,12 +97,12 @@ class _StatePageState extends State<StatePage> {
   List<charts.Series<DateVsValue, DateTime>> _dailyDeceasedData() {
     int maxIndex = _graphDuration == GraphDuration.week
         ? 7
-        : _graphDuration == GraphDuration.month ? 30 : widget.data.daily.length;
+        : _graphDuration == GraphDuration.month ? 30 : Data.caseData.states[widget.index].daily.length;
     var deceasedData = List<DateVsValue>.generate(
         maxIndex,
         (index) => DateVsValue(
-            widget.data.daily[widget.data.daily.length - maxIndex + index].date,
-            widget.data.daily[widget.data.daily.length - maxIndex + index]
+            Data.caseData.states[widget.index].daily[Data.caseData.states[widget.index].daily.length - maxIndex + index].date,
+            Data.caseData.states[widget.index].daily[Data.caseData.states[widget.index].daily.length - maxIndex + index]
                 .deceased
                 .toDouble()));
     return [
@@ -140,18 +140,19 @@ class _StatePageState extends State<StatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text(widget.data.name, style: TextStyle(color: Colors.black54)),
+        title: Text(Data.caseData.states[widget.index].name, style: TextStyle(color: Theme.of(context).textTheme.headline6.color)),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black54),
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
       ),
       body: Column(
         children: <Widget>[
-          Text('Total Cases (${widget.data.confirmed} Confirmed)',
+          Text('Total Cases  (${Data.caseData.states[widget.index].confirmed} Confirmed)',
               style: TextStyle(
                   fontFamily: 'Darker Grotesque',
                   fontSize: MediaQuery.of(context).size.width / 24,
@@ -173,7 +174,8 @@ class _StatePageState extends State<StatePage> {
                           arcWidth: MediaQuery.of(context).size.width ~/ 6,
                           arcRendererDecorators: [
                             charts.ArcLabelDecorator(
-                                labelPosition: charts.ArcLabelPosition.auto)
+                              labelPosition: charts.ArcLabelPosition.auto,
+                            )
                           ]),
                     ),
                   ),
@@ -261,9 +263,7 @@ class _StatePageState extends State<StatePage> {
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Week',
                           textAlign: TextAlign.center,
-                          style: _graphDuration == GraphDuration.week
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -281,9 +281,7 @@ class _StatePageState extends State<StatePage> {
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Month',
                           textAlign: TextAlign.center,
-                          style: _graphDuration == GraphDuration.month
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -301,36 +299,34 @@ class _StatePageState extends State<StatePage> {
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Lifetime',
                           textAlign: TextAlign.center,
-                          style: _graphDuration == GraphDuration.lifetime
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
             ],
           ),
           Expanded(
               child: Swiper(
-            itemCount: 4,
-            itemBuilder: (context, index) => Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: _swiperGraph(index),
-            ),
-            pagination: SwiperPagination(),
-            controller: _swiperController,
-            onIndexChanged: (index) => setState(() {
-              _swiperController.index = index;
-            }),
-          )),
+                itemCount: 4,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: _swiperGraph(index),
+                ),
+                pagination: SwiperPagination(),
+                controller: _swiperController,
+                onIndexChanged: (index) => setState(() {
+                  _swiperController.index = index;
+                }),
+              )),
           Padding(
               padding: const EdgeInsets.all(8.0),
               child: Material(
                 elevation: 16.0,
                 borderRadius: BorderRadius.all(Radius.circular((5.0))),
-                color: Colors.blue,
+                color: Theme.of(context).accentColor,
                 child: InkWell(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          DistrictWise(widget.data))),
+                          DistrictWise(widget.index))),
                   child: Row(children: <Widget>[
                     Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -338,11 +334,11 @@ class _StatePageState extends State<StatePage> {
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Text('View Districtwise Data',
+                            Text('View Statewise Data',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize:
-                                        MediaQuery.of(context).size.width / 24,
+                                    MediaQuery.of(context).size.width / 24,
                                     fontFamily: 'Darker Grotesque',
                                     fontWeight: FontWeight.w600)),
                             Icon(Icons.navigate_next, color: Colors.white)

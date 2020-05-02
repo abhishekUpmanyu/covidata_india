@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Data {
-  Cases caseData;
+  static Cases caseData;
 
   Map<String, int> _months = <String, int>{
     'Jan': DateTime.january,
@@ -37,6 +37,7 @@ class Data {
     var dailyData = await _getDailyData();
     List<Daily> indiaDaily = dailyData[0];
     List<StateDaily> daily = dailyData[1];
+    daily.removeWhere((element) => element.stateCode==null);
     int stateIndex = -1;
     jsonData.forEach((sk, sv) {
       ++stateIndex;
@@ -66,7 +67,6 @@ class Data {
           deceased: deceased,
           recovered: recovered,
           daily: daily
-              .sublist(stateIndex)
               .firstWhere((daily) =>
                   daily.stateCode.toLowerCase() ==
                   sv['statecode'].toString().toLowerCase())

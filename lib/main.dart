@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier(lightTheme),
+  runApp(ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier(darkTheme),
       child: MyApp()));
 }
 

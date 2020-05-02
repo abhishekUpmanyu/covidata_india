@@ -1,12 +1,13 @@
+import 'package:covidata/ui/my_grid_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:covidata/pages/district_page.dart';
 import 'package:covidata/utils/data.dart';
 import 'package:covidata/utils/sort.dart';
 
 class DistrictWise extends StatefulWidget {
-  final StateData data;
+  final int index;
 
-  DistrictWise(this.data);
+  DistrictWise(this.index);
 
   @override
   _DistrictWiseState createState() => _DistrictWiseState();
@@ -21,126 +22,23 @@ class _DistrictWiseState extends State<DistrictWise> {
     super.initState();
   }
 
-  Widget _stateListTile(int index) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(5.0)),
-        color: Colors.white,
-        elevation: 16.0,
-        child: InkWell(
-          onTap: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  DistrictPage(widget.data.districts[index]))),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(widget.data.districts[index].name,
-                          overflow: TextOverflow.fade,
-                          style: TextStyle(
-                              fontSize: MediaQuery.of(context).size.width / 24,
-                              fontFamily: 'Darker Grotesque',
-                              fontWeight: FontWeight.w500)),
-                    ),
-                    Text(widget.data.districts[index].confirmed.toString(),
-                        style: TextStyle(
-                            fontFamily: 'Darker Grotesque',
-                            fontSize: MediaQuery.of(context).size.width / 24,
-                            fontWeight: FontWeight.w500))
-                  ],
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Flexible(
-                    flex: widget.data.districts[index].active,
-                    child: Container(
-                      height: 5,
-                      color: Color(0xff0099cf),
-                    ),
-                  ),
-                  Flexible(
-                    flex: widget.data.districts[index].deceased,
-                    child: Container(height: 5, color: Color(0xffe75f5f)),
-                  ),
-                  Flexible(
-                    flex: widget.data.districts[index].deceased,
-                    child: Container(
-                      height: 5,
-                      color: Color(0xff61dd74),
-                    ),
-                  )
-                ],
-              ),
-              Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Active',
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                color: Color(0xff0099cf),
-                                fontWeight: FontWeight.w500)),
-                        Text(widget.data.districts[index].active.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                color: Color(0xff0099cf),
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Recovered',
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                color: Color(0xff61dd74),
-                                fontWeight: FontWeight.w500)),
-                        Text(widget.data.districts[index].recovered.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                color: Color(0xff61dd74),
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text('Deceased',
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                color: Color(0xffe75f5f),
-                                fontWeight: FontWeight.w500)),
-                        Text(widget.data.districts[index].deceased.toString(),
-                            style: TextStyle(
-                                fontFamily: 'Darker Grotesque',
-                                color: Color(0xffe75f5f),
-                                fontWeight: FontWeight.w600))
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
+  Future<Null> _sortData() async {
+    Data.caseData.states[widget.index].districts.sort((a, b) {
+      switch(_parameter) {
+        case SortParameter.name:
+          return _sort==Sort.ascending?a.name.compareTo(b.name):b.name.compareTo(a.name);
+        case SortParameter.confirmed:
+          return _sort==Sort.ascending?a.confirmed.compareTo(b.confirmed):b.confirmed.compareTo(a.confirmed);
+        case SortParameter.active:
+          return _sort==Sort.ascending?a.active.compareTo(b.active):b.active.compareTo(a.active);
+        case SortParameter.recovered:
+          return _sort==Sort.ascending?a.recovered.compareTo(b.recovered):b.recovered.compareTo(a.recovered);
+        case SortParameter.deceased:
+          return _sort==Sort.ascending?a.deceased.compareTo(b.deceased):b.deceased.compareTo(a.deceased);
+        default:
+          return a.name.compareTo(b.name);
+      }
+    });
   }
 
   @override
@@ -148,16 +46,17 @@ class _DistrictWiseState extends State<DistrictWise> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text('Districts', style: TextStyle(color: Colors.black54)),
+        title: Text('Districts', style: TextStyle(color: Theme.of(context).appBarTheme.textTheme.headline6.color)),
         centerTitle: true,
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black54),
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: Column(
         children: <Widget>[
-          /*Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
@@ -168,14 +67,12 @@ class _DistrictWiseState extends State<DistrictWise> {
                       borderRadius: BorderRadius.all(Radius.circular(100.0))),
                   child: GestureDetector(
                     onTap: () =>
-                        setState(() => _parameter = SortParameter.name),
+                        setState(() {_parameter = SortParameter.name; _sortData();}),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Name',
                           textAlign: TextAlign.center,
-                          style: _parameter == SortParameter.name
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -186,14 +83,12 @@ class _DistrictWiseState extends State<DistrictWise> {
                       borderRadius: BorderRadius.all(Radius.circular(100.0))),
                   child: GestureDetector(
                     onTap: () =>
-                        setState(() => _parameter = SortParameter.confirmed),
+                        setState(() {_parameter = SortParameter.confirmed; _sortData();}),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Confirmed',
                           textAlign: TextAlign.center,
-                          style: _parameter == SortParameter.confirmed
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -204,14 +99,12 @@ class _DistrictWiseState extends State<DistrictWise> {
                       borderRadius: BorderRadius.all(Radius.circular(100.0))),
                   child: GestureDetector(
                     onTap: () =>
-                        setState(() => _parameter = SortParameter.active),
+                        setState(() {_parameter = SortParameter.active; _sortData();}),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Active',
                           textAlign: TextAlign.center,
-                          style: _parameter == SortParameter.active
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -222,14 +115,12 @@ class _DistrictWiseState extends State<DistrictWise> {
                       borderRadius: BorderRadius.all(Radius.circular(100.0))),
                   child: GestureDetector(
                     onTap: () =>
-                        setState(() => _parameter = SortParameter.recovered),
+                        setState(() {_parameter = SortParameter.recovered; _sortData();}),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Recovered',
                           textAlign: TextAlign.center,
-                          style: _parameter == SortParameter.recovered
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -240,23 +131,23 @@ class _DistrictWiseState extends State<DistrictWise> {
                       borderRadius: BorderRadius.all(Radius.circular(100.0))),
                   child: GestureDetector(
                     onTap: () =>
-                        setState(() => _parameter = SortParameter.deceased),
+                        setState(() {_parameter = SortParameter.deceased; _sortData();}),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Deceased',
                           textAlign: TextAlign.center,
-                          style: _parameter == SortParameter.deceased
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(100.0))),
                   child: GestureDetector(
-                    onTap: () => setState(() => _sort = _sort == Sort.ascending
+                    onTap: () => setState(() {_sort = _sort == Sort.ascending
                         ? Sort.descending
-                        : Sort.ascending),
+                        : Sort.ascending;
+                    _sortData();
+                    }),
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
                       child: Row(
@@ -264,27 +155,36 @@ class _DistrictWiseState extends State<DistrictWise> {
                           Icon(
                             Icons.keyboard_arrow_down,
                             color: _sort == Sort.ascending
-                                ? Colors.black12
-                                : Colors.black87,
+                                ? Theme.of(context).accentColor.withOpacity(0.4)
+                                : Theme.of(context).accentColor,
                           ),
                           Icon(
                             Icons.keyboard_arrow_up,
                             color: _sort == Sort.descending
-                                ? Colors.black12
-                                : Colors.black87,
+                                ? Theme.of(context).accentColor.withOpacity(0.4)
+                                : Theme.of(context).accentColor,
                           )
                         ],
                       ),
                     ),
                   ))
             ],
-          ),*/
+          ),
           Expanded(
             child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2),
-                itemCount: widget.data.districts.length,
-                itemBuilder: (context, index) => _stateListTile(index)),
+                itemCount: Data.caseData.states[widget.index].districts.length,
+                itemBuilder: (context, index) => MyGridTile(
+                    Data.caseData.states[widget.index].districts[index].name,
+                    Data.caseData.states[widget.index].districts[index].confirmed,
+                    Data.caseData.states[widget.index].districts[index].active,
+                    Data.caseData.states[widget.index].districts[index].recovered,
+                    Data.caseData.states[widget.index].districts[index].deceased,
+                        () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            DistrictPage(Data.caseData.states[widget.index].districts[index])))
+                )),
           ),
         ],
       ),

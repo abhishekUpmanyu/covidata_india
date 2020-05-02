@@ -4,10 +4,6 @@ import 'package:covidata/pages/state_page.dart';
 import 'package:covidata/utils/data.dart';
 
 class Search extends StatefulWidget {
-  final Data data;
-
-  Search(this.data);
-
   @override
   _SearchState createState() => _SearchState();
 }
@@ -23,7 +19,7 @@ class _SearchState extends State<Search> {
     _controller.addListener(() {
       _states = List<StateData>();
       _districts = List<DistrictData>();
-      widget.data.caseData.states.forEach((state) {
+      Data.caseData.states.forEach((state) {
         if (state.name.toLowerCase().contains(_controller.text.toLowerCase())) {
           _states.add(state);
         }
@@ -54,7 +50,7 @@ class _SearchState extends State<Search> {
         onTap: () {
           Navigator.of(context).pushReplacement(MaterialPageRoute(
             builder: (BuildContext context) => index < _states.length
-                ? StatePage(_states[index])
+                ? StatePage(Data.caseData.states.indexWhere((data) => data.stateCode==_states[index].stateCode))
                 : DistrictPage(_districts[index - _states.length])));},
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -163,7 +159,7 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).backgroundColor,
         child: Column(
           children: <Widget>[
             Hero(
@@ -187,13 +183,10 @@ class _SearchState extends State<Search> {
                         child: TextField(
                           controller: _controller,
                           autofocus: true,
+                          cursorColor: Theme.of(context).accentColor,
                           decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Search for District or State', hintStyle: TextStyle(
-                              fontFamily: 'Darker Grotesque',
-                              fontSize:
-                              MediaQuery.of(context).size.width / 24,
-                              color: Colors.black54)),
+                              hintText: 'Search for District or State', hintStyle: Theme.of(context).textTheme.bodyText2),
                         ),
                       ),
                     ],

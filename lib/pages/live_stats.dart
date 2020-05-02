@@ -7,10 +7,6 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:covidata/utils/graph_duration.dart';
 
 class LiveStats extends StatefulWidget {
-  final Data data;
-
-  LiveStats(this.data);
-
   @override
   _LiveStatsState createState() => _LiveStatsState();
 }
@@ -28,30 +24,26 @@ class _LiveStatsState extends State<LiveStats> {
     'Daily Deceased'
   ];
 
-  List<charts.Series<CADRPie, String>> _seriesPieData =
-      List<charts.Series<CADRPie, String>>();
-
   @override
   void initState() {
     Future.delayed(Duration(milliseconds: 500), () => _animateCharts = false);
-    _generatePieData();
     super.initState();
   }
 
-  _generatePieData() {
+  List<charts.Series<CADRPie, String>> _seriesPieData() {
     var pieData = [
-      CADRPie('Active', widget.data.caseData.active, Color(0xff0099cf)),
-      CADRPie('Recovered', widget.data.caseData.recovered, Color(0xff61dd74)),
-      CADRPie('Deceased', widget.data.caseData.deceased, Color(0xffe75f5f))
+      CADRPie('Active', Data.caseData.active, Color(0xff0099cf)),
+      CADRPie('Recovered', Data.caseData.recovered, Color(0xff61dd74)),
+      CADRPie('Deceased', Data.caseData.deceased, Color(0xffe75f5f))
     ];
-    _seriesPieData.add(charts.Series(
+    return [charts.Series(
         data: pieData,
         domainFn: (CADRPie cadr, _) => cadr.label,
         measureFn: (CADRPie cadr, _) => cadr.value,
         colorFn: (CADRPie cadr, _) =>
             charts.ColorUtil.fromDartColor(cadr.color),
         id: 'Cases Pie Chart',
-        labelAccessorFn: (CADRPie cadr, _) => '${cadr.value}'));
+        labelAccessorFn: (CADRPie cadr, _) => '${cadr.value}')];
   }
 
   List<charts.Series<DateVsValue, DateTime>> _dailyConfirmedData() {
@@ -59,19 +51,17 @@ class _LiveStatsState extends State<LiveStats> {
         ? 7
         : _graphDuration == GraphDuration.month
             ? 30
-            : widget.data.caseData.daily.length;
+            : Data.caseData.daily.length;
     var confirmedData = List<DateVsValue>.generate(
         maxIndex,
         (index) => DateVsValue(
-            widget
-                .data
+            Data
                 .caseData
-                .daily[widget.data.caseData.daily.length - maxIndex + index]
+                .daily[Data.caseData.daily.length - maxIndex + index]
                 .date,
-            widget
-                .data
+            Data
                 .caseData
-                .daily[widget.data.caseData.daily.length - maxIndex + index]
+                .daily[Data.caseData.daily.length - maxIndex + index]
                 .confirmed
                 .toDouble()));
     return [
@@ -89,19 +79,17 @@ class _LiveStatsState extends State<LiveStats> {
         ? 7
         : _graphDuration == GraphDuration.month
             ? 30
-            : widget.data.caseData.daily.length;
+            : Data.caseData.daily.length;
     var recoveredData = List<DateVsValue>.generate(
         maxIndex,
         (index) => DateVsValue(
-            widget
-                .data
+            Data
                 .caseData
-                .daily[widget.data.caseData.daily.length - maxIndex + index]
+                .daily[Data.caseData.daily.length - maxIndex + index]
                 .date,
-            widget
-                .data
+            Data
                 .caseData
-                .daily[widget.data.caseData.daily.length - maxIndex + index]
+                .daily[Data.caseData.daily.length - maxIndex + index]
                 .recovered
                 .toDouble()));
     return [
@@ -119,19 +107,17 @@ class _LiveStatsState extends State<LiveStats> {
         ? 7
         : _graphDuration == GraphDuration.month
             ? 30
-            : widget.data.caseData.daily.length;
+            : Data.caseData.daily.length;
     var deceasedData = List<DateVsValue>.generate(
         maxIndex,
         (index) => DateVsValue(
-            widget
-                .data
+            Data
                 .caseData
-                .daily[widget.data.caseData.daily.length - maxIndex + index]
+                .daily[Data.caseData.daily.length - maxIndex + index]
                 .date,
-            widget
-                .data
+            Data
                 .caseData
-                .daily[widget.data.caseData.daily.length - maxIndex + index]
+                .daily[Data.caseData.daily.length - maxIndex + index]
                 .deceased
                 .toDouble()));
     return [
@@ -167,18 +153,19 @@ class _LiveStatsState extends State<LiveStats> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        title: Text('India', style: TextStyle(color: Colors.black54)),
+        title: Text('India', style: TextStyle(color: Theme.of(context).textTheme.headline6.color)),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black54),
+          icon: Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.of(context).pop(),
         ),
+        iconTheme: Theme.of(context).appBarTheme.iconTheme,
       ),
       body: Column(
         children: <Widget>[
-          Text('Total Cases  (${widget.data.caseData.confirmed} Confirmed)',
+          Text('Total Cases  (${Data.caseData.confirmed} Confirmed)',
               style: TextStyle(
                   fontFamily: 'Darker Grotesque',
                   fontSize: MediaQuery.of(context).size.width / 24,
@@ -193,14 +180,15 @@ class _LiveStatsState extends State<LiveStats> {
                   Flexible(
                     flex: 2,
                     child: charts.PieChart(
-                      _seriesPieData,
+                      _seriesPieData(),
                       animate: _animateCharts,
                       animationDuration: Duration(milliseconds: 300),
                       defaultRenderer: charts.ArcRendererConfig(
                           arcWidth: MediaQuery.of(context).size.width ~/ 6,
                           arcRendererDecorators: [
                             charts.ArcLabelDecorator(
-                                labelPosition: charts.ArcLabelPosition.auto)
+                                labelPosition: charts.ArcLabelPosition.auto,
+                            )
                           ]),
                     ),
                   ),
@@ -288,9 +276,7 @@ class _LiveStatsState extends State<LiveStats> {
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Week',
                           textAlign: TextAlign.center,
-                          style: _graphDuration == GraphDuration.week
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -308,9 +294,7 @@ class _LiveStatsState extends State<LiveStats> {
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Month',
                           textAlign: TextAlign.center,
-                          style: _graphDuration == GraphDuration.month
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
               Container(
@@ -328,9 +312,7 @@ class _LiveStatsState extends State<LiveStats> {
                       padding: const EdgeInsets.all(4.0),
                       child: Text('Lifetime',
                           textAlign: TextAlign.center,
-                          style: _graphDuration == GraphDuration.lifetime
-                              ? Theme.of(context).accentTextTheme.button
-                              : Theme.of(context).textTheme.button),
+                          style: Theme.of(context).textTheme.button),
                     ),
                   )),
             ],
@@ -353,11 +335,11 @@ class _LiveStatsState extends State<LiveStats> {
               child: Material(
                 elevation: 16.0,
                 borderRadius: BorderRadius.all(Radius.circular((5.0))),
-                color: Colors.blue,
+                color: Theme.of(context).accentColor,
                 child: InkWell(
                   onTap: () => Navigator.of(context).push(MaterialPageRoute(
                       builder: (BuildContext context) =>
-                          StateWise(widget.data))),
+                          StateWise())),
                   child: Row(children: <Widget>[
                     Padding(
                         padding: const EdgeInsets.all(12.0),
