@@ -10,9 +10,12 @@ It provides live statistics, along with daily count of confirmed, active, recove
 
 ## Screenshots
 
-<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss2.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss3.png">
-
-<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss4.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="300px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss5.png">
+|             Light Theme              |              Dark Theme              |
+| :----------------------------------: | :----------------------------------: |
+| ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss2.png) | ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss6.png) |
+| ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss3.png) | ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss7.png) |
+| ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss4.png) | ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss8.png) |
+| ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss5.png) | ![](https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss9.png) |
 
 ### Do :star: the repo if you like it!
 
