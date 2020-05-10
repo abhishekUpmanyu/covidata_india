@@ -6,7 +6,7 @@ It provides live statistics, along with daily count of confirmed, active, recove
 
 CoviData Android app can be downloaded [here](https://cheeseball.co)
 
-Website built by [@zaryanz](github.com/zaryanz)
+Website built by [@zaryanz](https://github.com/zaryanz)
 
 <p align="center">
   <img width="800px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss1.png">
