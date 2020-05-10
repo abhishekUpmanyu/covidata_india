@@ -4,6 +4,10 @@ CoviData India visualises COVID-19 data in India.
 
 It provides live statistics, along with daily count of confirmed, active, recovered and deceased patients. CoviData covers nation level, state level and district level cases.
 
+CoviData Android app can be downloaded [here](https://cheeseball.co)
+
+Website built by [@zaryanz](github.com/zaryanz)
+
 <p align="center">
   <img width="800px"  src="https://raw.githubusercontent.com/abhishekUpmanyu/covidata_india/master/screenshots/ss1.png">
 </p>
